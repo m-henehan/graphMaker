@@ -22,6 +22,39 @@ exports.addMessage = functions.https.onRequest(async (req, res) => {
   // [END adminSdkAdd]
 });
 
+exports.saveVisGraph = functions.https.onRequest((request, response) =>
+{
+    cors(request, response, () => {
+        //const currentTime = admin.firestore.Timestamp.now();
+        //request.body.timestamp = currentTime;
+
+        return admin.firestore().collection("visGraph").add(request.body).then((snapshot) =>{
+            console.log("saved in database");
+            console.log(snapshot.id);
+            // console.log(snapshot.DocumentReference.toString());
+            // console.log("sending document reference id: ");
+            //console.log(DocumentReference[id]);
+            response.send(JSON.stringify(snapshot.id));
+        });
+    });
+});
+
+exports.saveVisGraphPrivate = functions.https.onRequest((request, response) =>
+{
+    cors(request, response, () => {
+        //const currentTime = admin.firestore.Timestamp.now();
+        //request.body.timestamp = currentTime;
+
+        return admin.firestore().collection("visGraphPrivate").add(request.body).then((snapshot) =>{
+            console.log("saved in database");
+            console.log(snapshot.id);
+            // console.log(snapshot.DocumentReference.toString());
+            // console.log("sending document reference id: ");
+            //console.log(DocumentReference[id]);
+            response.send(JSON.stringify(snapshot.id));
+        });
+    });
+});
 
 exports.saveGraph = functions.https.onRequest((request, response) =>
 {
