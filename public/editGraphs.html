@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Create Graphs Here</title>
+  <!-- Theme Made By www.w3schools.com -->
+  <title>Home</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -11,12 +12,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <script src="./edit_vis_temp.js"></script>
   <script src="./register.js"></script>
-  <script src="./fishbone_vis.js"></script>
   <script src="./login.js"></script>
   <script src="./logout.js"></script>
 </head>
-<body onload = 'checkAuth()' id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
+<body onload = checkAuth() id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
 
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
@@ -30,43 +31,24 @@
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="./homePage.html">MY GRAPHS</a></li>
+        <li><a href="./createGraphs.html">CREATE GRAPHS</a></li>
 		<li><a href="./searchGraphs.html">SEARCH GRAPHS</a></li>
-        <li><a onclick="logout()">LOG OUT</a></li>
+        <li><a onclick='logout()'>LOG OUT</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
 <div class="jumbotron text-center">
-<h1>Create Graphs Here!</h1>
-
-<div id = 'form' class="create-form">
-        <h2 class="text-center">Fishbone</h2> 
-        <div class="form-group">
-			<div id = 'cause'>
-            <input id="causes1" type="text" class="form-control" placeholder="Cause" required="required">
-			<button id ='newSub1' onclick="newSubCause(1)" class="btn btn-block">add new sub-cause</button><br>
-			</div>
-			<button onclick="newCause()" class="btn btn-block">add new cause</button>
-        </div>
-        <div class="form-group">
-            <input id="effects" type="text" class="form-control" placeholder="Effect" required="required">
-        </div>
-        <div class="form-group">
-            <button onclick="graph()" class="btn btn-block">Create Graph</button>
-        </div>
-				<div class="form-group">
-            <button onclick="saveGraph()" class="btn btn-block">Save Graph to Public Database</button>
-        </div> 
-		<div class="form-group">
-            <button onclick="saveVisGraphPrivate()" class="btn btn-block">Save Graph to Private Database</button>
-        </div> 
-    </form>
+<div id="graphHome" class="graphHome">
+  <h1>My Graphs</h1>
+  </div>
 </div>
-<center>
-<div id="mynetwork"></div>
-</center>
+
+<div id="graphs">
+
+</div>
+
 
 
 <footer class="container-fluid text-center">

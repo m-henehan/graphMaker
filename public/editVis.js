@@ -132,8 +132,8 @@ function vis_fishbone(...params)
 	
 	let network = new vis.Network(container, data, options);
 	
-	document.getElementById("buttonyo"+j).innerHTML += "<br><center><button id='remove' onclick=\"removeGraph("+j+")\" class='btn btn-warning btn-lg' >Close Graph</button></center><br>";
-	
+	document.getElementById("buttonyo"+j).innerHTML += "<br><center><button id='remove' onclick=\"removeGraph("+j+")\" class='btn btn-warning btn-lg' >Close Graph</button></center>";
+	document.getElementById("buttonyo"+j).innerHTML += "<br><center><button id='edit' onclick=\"editGraph('"+causes+"', '"+subcauses+"', '"+effect+"', "+j+", '"+parents+"')\" class='btn btn-warning btn-lg' >Edit Graph</button></center><br>";
 	
 }
 
@@ -141,6 +141,29 @@ function removeGraph(j){
 	document.getElementById("graph"+j).innerHTML =" ";
 	document.getElementById("buttonyo"+j).innerHTML = "";
 	
+}
+
+function editGraph(...params){
+	let causes = params[0].split(',');
+	console.log(causes);
+	let effect = params[2];
+	let j = params[3];
+	let subcauses = params[1].split(',');
+	let parents = params[4].split(',');
+	console.log(parents);
+	document.getElementById("graph"+j).innerHTML =" ";
+	const edit = document.getElementById("edit");
+	edit.remove();
+	for(let i=0; i<causes.length; i++){
+		document.getElementById("graph"+j).innerHTML += "<center><h3>Cause "+(i+1)+": "+causes[i]+"</h3></center>";
+		for(let k=0; k<parents.length; k++){
+			if (parents[k] == (i+1)){
+				document.getElementById("graph"+j).innerHTML += "<center><h4>SubCause: "+subcauses[k]+"</h4></center>";
+				document.getElementById("graph"+j).innerHTML +=  "<br><center><button id ='deleteSub"+i+"' onclick='deleteCause(0)' class='btn btn-danger btn-lg'>Delete SubCause</button></center>";
+			}
+		}
+		document.getElementById("graph"+j).innerHTML +=  "<br><center><button id ='delete"+i+"' onclick='deleteCause(0)' class='btn btn-danger btn-lg'>Delete Cause</button></center><br>"
+	}
 }
 
 function showGraphs()
@@ -194,12 +217,6 @@ function showGraphs()
     xhr.send(null);
 }
 
-
-function removeGraph(j){
-	document.getElementById("graph"+j).innerHTML =" ";
-	document.getElementById("buttonyo"+j).innerHTML = "";
-	
-}
 
 function sayHello(){
 	var xhr = new XMLHttpRequest();

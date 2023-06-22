@@ -12,7 +12,7 @@ firebase.auth().signInWithEmailAndPassword(email, password)
             document.cookie = "uid=" + user.uid;
             console.log("User object", user);
 			console.log(user.za);
-			window.location.href = "./createGraphs.html";
+			window.location.href = "./fishbone2.html";
 	
   })
   .catch((error) => {

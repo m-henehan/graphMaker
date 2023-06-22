@@ -144,6 +144,38 @@ exports.returnGraphs = functions.https.onRequest((request, response) => {
     });
 });
 
+exports.returnGraphsVis = functions.https.onRequest((request, response) => {
+	console.log("returnGraphs");
+
+    //connect to our Firestore database
+    cors(request, response, () => {
+        let myData = []
+        //console.log("request body: "+request.body);
+        //console.log("request docid: "+request.body.docid);
+		//doc(request.body.docid)
+		console.log("request: "+request.body.toString());
+		console.log("at least it worked");
+        admin.firestore().collection("visGraph").get().then((snapshot) => {
+            if (snapshot.empty) {
+                console.log('No matching documents.');
+                response.status(404).send('No data in database'); // fix syntax error and add error status
+                return;
+            }
+
+            snapshot.forEach(doc => {
+				let docObj = {};
+                docObj.id = doc.id;
+                myData.push(Object.assign(docObj, doc.data()));
+            })
+			console.log("myData: "+myData[0].code);
+            response.send(myData);
+        }).catch((error) => { // add catch block to handle errors
+            console.error(error);
+            response.status(500).send('Internal server error');
+        });
+    });
+});
+
 exports.returnUserGraphs = functions.https.onRequest((request, response) => {
 	console.log("returnUserGraphs");
 
@@ -156,6 +188,39 @@ exports.returnUserGraphs = functions.https.onRequest((request, response) => {
 		console.log("request: "+request.body.toString());
 		console.log("at least it worked");
         admin.firestore().collection("graphPrivate").get().then((snapshot) => {
+            if (snapshot.empty) {
+                console.log('No matching documents.');
+                response.status(404).send('No data in database'); // fix syntax error and add error status
+                return;
+            }
+
+            snapshot.forEach(doc => {
+				let docObj = {};
+                docObj.id = doc.id;
+                myData.push(Object.assign(docObj, doc.data()));
+            })
+			console.log("myData: "+myData[0].code);
+            response.send(myData);
+        }).catch((error) => { // add catch block to handle errors
+            console.error(error);
+            response.status(500).send('Internal server error');
+        });
+    });
+});
+
+
+exports.returnUserGraphsVis = functions.https.onRequest((request, response) => {
+	console.log("returnUserGraphs");
+
+    //connect to our Firestore database
+    cors(request, response, () => {
+        let myData = []
+        //console.log("request body: "+request.body);
+        //console.log("request docid: "+request.body.docid);
+		//doc(request.body.docid)
+		console.log("request: "+request.body.toString());
+		console.log("at least it worked");
+        admin.firestore().collection("visGraphPrivate").get().then((snapshot) => {
             if (snapshot.empty) {
                 console.log('No matching documents.');
                 response.status(404).send('No data in database'); // fix syntax error and add error status
@@ -210,54 +275,26 @@ exports.returnUserEmail = functions.https.onRequest((request, response) => {
 });
 
 
-exports.authorizedendpoint = functions.https.onRequest((request, response) => {
-    cors(request, response, () => {
+exports.editGraph = functions.https.onRequest((request, response) => {
+var washingtonRef = db.collection("visGraph").doc("DC");
 
-        console.log('Check if request is authorized with Firebase ID token');
-        if ((!request.headers.authorization || !request.headers.authorization.startsWith('Bearer '))) {
-            console.error('No Firebase ID token was passed as a Bearer token in the Authorization header.',
-                'Make sure you authorize your request by providing the following HTTP header:',
-                'Authorization: Bearer <Firebase ID Token>');
-            response.status(403).send('Unauthorized');
-            return;
-        }
-        let idToken;
-        if (request.headers.authorization && request.headers.authorization.startsWith('Bearer ')) {
-            console.log('Found "Authorization" header');
-            // Read the ID Token from the Authorization header.
-            idToken = request.headers.authorization.split('Bearer ')[1];
-        } else {
-            // No cookie
-            response.status(403).send('Unauthorized');
-            return;
-        }
-        try {
-            admin.auth().verifyIdToken(idToken).then((token) => {
-                console.log('ID Token correctly decoded', token);
-                // Use token.uid to get documents belonging to a user
-                let myComments = [];
-                admin.firestore().collection('comments').where('uid', '==', token.uid).get().then((snapshot) => {
-
-                    if (snapshot.empty) {
-                        console.log('No matching documents.');
-                        response.send('No data ');
-                        return;
-                    }
-
-                    snapshot.forEach(doc => {
-                        let docObj = {};
-                        docObj.id = doc.id;
-                        myComments.push(Object.assign(docObj, doc.data()));
-                    });
-
-                    // 2. Send data back to client
-                    response.send(myComments);
-                })
-            });
-        } catch (error) {
-            console.error('Error while verifying Firebase ID token:', error);
-            response.status(403).send('Unauthorized');
-            return;
-        }
+// Set the "capital" field of the city 'DC'
+return washingtonRef.update({
+    capital: true
+})
+.then(() => {
+    console.log("Document successfully updated!");
+})
+.catch((error) => {
+    // The document probably doesn't exist.
+    console.error("Error updating document: ", error);
 });
+
 });
+
+function updateDocument(collectionName, documentId, updateObj) {
+  const db = admin.firestore();
+  const docRef = db.collection(collectionName).doc(documentId);
+  return docRef.update(updateObj);
+}
+

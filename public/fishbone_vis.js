@@ -186,7 +186,7 @@ function saveGraph(){
 	}
 	
 	let xhr = new XMLHttpRequest();
-	//saveGraphPrivate();
+	saveVisGraphPrivate();
 	
     xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/saveVisGraph', true);
 
@@ -210,7 +210,7 @@ function saveGraph(){
 	//"uid" : getCookie('uid')
 }
 
-function saveGraph(){
+function saveVisGraphPrivate(){
 	let parentArray = [];
 	let causes = [];
 	let subCauses = [];
@@ -246,4 +246,22 @@ function saveGraph(){
     // alert("details:  email: "+ email + "password: "+ password+ "uid: "+  uid);
     xhr.send(JSON.stringify({"causes":causes, "subcauses": subCauses, "parents": parentArray, "effect":document.getElementById("effects").value, "uid" : getCookie('uid')}));
 	//"uid" : getCookie('uid')
+}
+
+
+function checkAuth(){
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    // User is signed in, see docs for a list of available properties
+    // https://firebase.google.com/docs/reference/js/firebase.User
+	showGraphs();
+    var uid = user.uid;
+    // ...
+  } else {
+    // User is signed out
+    // ...
+	window.location.href ="./";
+	
+  }
+});
 }
