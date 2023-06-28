@@ -65,7 +65,7 @@ function createUser(){
             if (xhr.status === OK) {
                 let docId = JSON.parse(xhr.responseText);
                 document.cookie = "docid =" + docId;
-                window.location.href = "./createGraphs.html";
+                window.location.href = "./fishbone2.html";
             } else {
                 console.log('Error: ' + xhr.status);
             }

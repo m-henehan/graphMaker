@@ -292,9 +292,68 @@ return washingtonRef.update({
 
 });
 
-function updateDocument(collectionName, documentId, updateObj) {
-  const db = admin.firestore();
-  const docRef = db.collection(collectionName).doc(documentId);
-  return docRef.update(updateObj);
+async function updateDocument(collectionName, documentId, newData) {
+  try {
+    // Construct the reference to the document
+    const docRef = db.collection(collectionName).doc(documentId);
+
+    // Update the document with the new data
+    await docRef.update(newData);
+
+    console.log('Document updated successfully');
+  } catch (error) {
+    console.error('Error updating document:', error);
+  }
 }
+
+exports.updateDocument = functions.https.onRequest((request, response) =>
+{
+    cors(request, response, () => {
+        //const currentTime = admin.firestore.Timestamp.now();
+        //request.body.timestamp = currentTime;
+		const docRef = admin.firestore().collection(request.body.collectionName).doc(request.body.documentId);
+        return docRef.update(request.body.graph).then((snapshot) =>{
+            console.log("edited in database");
+            console.log(snapshot.id);
+            // console.log(snapshot.DocumentReference.toString());
+            // console.log("sending document reference id: ");
+            //console.log(DocumentReference[id]);
+            response.send(JSON.stringify(snapshot.id));
+        });
+    });
+});
+
+
+exports.returnUserGraphsVisPublic = functions.https.onRequest((request, response) => {
+	console.log("returnUserGraphs");
+
+    //connect to our Firestore database
+    cors(request, response, () => {
+        let myData = []
+        //console.log("request body: "+request.body);
+        //console.log("request docid: "+request.body.docid);
+		//doc(request.body.docid)
+		console.log("request: "+request.body.toString());
+		console.log("at least it worked");
+        admin.firestore().collection("visGraph").get().then((snapshot) => {
+            if (snapshot.empty) {
+                console.log('No matching documents.');
+                response.status(404).send('No data in database'); // fix syntax error and add error status
+                return;
+            }
+
+            snapshot.forEach(doc => {
+				let docObj = {};
+                docObj.id = doc.id;
+                myData.push(Object.assign(docObj, doc.data()));
+            })
+			console.log("myData: "+myData[0].code);
+            response.send(myData);
+        }).catch((error) => { // add catch block to handle errors
+            console.error(error);
+            response.status(500).send('Internal server error');
+        });
+    });
+});
+
 
