@@ -29,7 +29,7 @@
     font-family: Montserrat, sans-serif;
   }
   .container-fluid {
-    padding: 60px 50px;
+    
   }
   .bg-grey {
     background-color: #f6f6f6;
@@ -193,8 +193,28 @@ canvas {
     margin-left: auto;
     margin-right: auto;
     display: block;
-    width: 500px;
-	height: 250px;
+    width: 300px;
+	height: 170px;
 	border:1px solid #000000;
 	background-color: white;
+}
+
+.modal-content {
+  width:100%;
+}
+
+.modal-dialog-centered {
+  display:-webkit-box;
+  display:-ms-flexbox;
+  display:flex;
+  -webkit-box-align:center;
+  -ms-flex-align:center;
+  align-items:center;
+  min-height:calc(100% - (.5rem * 2));
+}
+
+@media (min-width: 576px) {
+  .modal-dialog-centered {
+    min-height:calc(100% - (1.75rem * 2));
+  }
 }
