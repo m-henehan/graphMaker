@@ -1,5 +1,3 @@
-var cookie1 = "";
-
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -28,7 +26,6 @@ function register()
 			var user = userCredential.user;
             document.cookie = "accessToken=" + user.za;
                 document.cookie = "uid=" + user.uid;
-                console.log("User object", user);
                 alert("Account successfully created! Logging you in!");
                 
                 // ...
@@ -37,15 +34,14 @@ function register()
             var errorCode = error.code;
             var errorMessage = error.message;
             console.log(errorMessage, errorCode);
-			alert("Error: " +errorMessage);
+			alert(errorMessage);
         });
 		createUser();
 		
 	}
 	
 	else{
-		alert("Incorrect or badly formatted email address/password entered. Password must be at least six characters");
-		
+		alert("Incorrect email address or password entered.");
 	}
 	
 
@@ -64,14 +60,14 @@ function createUser(){
         if (xhr.readyState === DONE) {
             if (xhr.status === OK) {
                 let docId = JSON.parse(xhr.responseText);
-                //document.cookie = "docid =" + docId;
+                document.cookie = "docid =" + docId;
                 window.location.href = "./fishbone_2.html";
             } else {
                 console.log('Error: ' + xhr.status);
             }
         }
     };
+
     xhr.send(JSON.stringify({"email":document.getElementById("email1").value, "uid" : getCookie('uid')}));
 	//"uid" : getCookie('uid')
 }
-

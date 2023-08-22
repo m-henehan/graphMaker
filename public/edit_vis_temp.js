@@ -204,7 +204,6 @@ function showGraphs()
 					}
                     graphlist.push(data[j].code);
                 }
-                console.log("graphlist:" + graphlist[0]);
 				sHTML += "</p>";
                 document.getElementById("graphs").innerHTML += sHTML;
 				
@@ -233,10 +232,8 @@ function sayHello(){
 				let email = "";
                 let data = JSON.parse(xhr.responseText);
                 for (let j = 0; j < data.length; j++) {
-					console.log("User uid " +data[j].uid+ " Cookie uid " +getCookie('uid')+ " User email: " +data[j].email);
 					if(data[j].uid === getCookie('uid')){
 						email = data[j].email;
-						console.log("Email: " +email);
 						}
                 }
 
@@ -262,6 +259,7 @@ firebase.auth().onAuthStateChanged((user) => {
   } else {
     // User is signed out
     // ...
+	//alert("No user");
 	window.location.href ="./";
 	
   }
@@ -591,9 +589,6 @@ function addCause(){
 	let causes1 = sendTo[0].split(',');
 	let j = sendTo[2];
 	let newCause = document.getElementById("new_element").value.toString();
-	console.log(newCause);
-	causes1.push(newCause);
-	console.log(causes1);
 	let parents1 = sendTo[4].split(',');
 	var docId1 = docIdDict[effect1];
 	var docId2 = docIdDictPublic[effect1];
@@ -637,7 +632,7 @@ function deleteCause(){
 	let causes1 = sendTo[0].split(',');
 	let j = sendTo[2];
 	const index = causes1.indexOf(oldCause);
-	causes2 = causes1.splice(index,index);
+	causes1.splice(index,1);
 	let parents1 = sendTo[4].split(',');
 	var docId1 = docIdDict[effect1];
 	var docId2 = docIdDictPublic[effect1];
@@ -659,7 +654,7 @@ function deleteCause(){
     };
 
     
-	xhr.send(JSON.stringify({"causes":causes2, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
 
 	}
 	}
@@ -673,7 +668,7 @@ function deleteSubCause(){
 	let subcauses1 = sendTo[3].split(',');
 	
 	const index = subcauses1.indexOf(oldSubCause);
-	subcauses2 = subcauses1.splice(index,index);
+	subcauses1.splice(index,1);
 	
 	let parents1 = sendTo[4].split(',');
 	var docId1 = docIdDict[effect1];
@@ -696,7 +691,7 @@ function deleteSubCause(){
     };
 
     
-	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses2, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
 }
 
 

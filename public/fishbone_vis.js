@@ -69,7 +69,6 @@ let numCounter = 2;
 		let nodesId = i;
 		let nodesLabel = causes[i-1];
 		if(i%2==1){
-		console.log("odd: " + nodesLabel);
 			nodes.push(
 			{id: causes.length + nodesId, 
 			label: ""},
@@ -80,12 +79,9 @@ let numCounter = 2;
 			{from: causes.length + nodesId,
 			to: nodesId,
 			label: ""}
-		);
-		console.log(causes.length + nodesId);
-		console.log(nodesId);
+		);;
 		}
 		else{
-			console.log("Even: " + nodesLabel);
 		nodes.push(
 			{id: nodesId, 
 			label: nodesLabel}
@@ -101,12 +97,9 @@ let numCounter = 2;
 		
 		
 		for(let i =0; i<subCauses.length; i++){
-			console.log("Subcauses: " +subCauses);
 		let nodesId = "sub" +i;
 		let nodesLabel = subCauses[i];
-		console.log(subCounter[i]);
 		let parentId = parentArra[i]; 
-		console.log("Parent: " +parentId);
 		nodes.push(
 			{id: nodesId, 
 			label: nodesLabel}
