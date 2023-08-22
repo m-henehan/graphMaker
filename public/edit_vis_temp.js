@@ -6,7 +6,6 @@ var sendTo;
 function vis_fishbone(...params)
 {
 	let causes = params[0].split(',');
-	console.log(causes);
 	let effect = params[1];
 	let j = params[2];
 	let subcauses = params[3].split(',');
@@ -39,7 +38,6 @@ function vis_fishbone(...params)
 		for(let i =1; i<causes.length + 1; i++){
 		let nodesId = i;
 		let nodesLabel = causes[i-1];
-		console.log(nodesLabel);
 		if(i%2==1){
 		console.log("odd: " + nodesLabel);
 			nodes.push(
@@ -53,11 +51,8 @@ function vis_fishbone(...params)
 			to: nodesId,
 			label: ""}
 		);
-		console.log(causes.length + nodesId);
-		console.log(nodesId);
 		}
 		else{
-			console.log("Even: " + nodesLabel);
 		nodes.push(
 			{id: nodesId, 
 			label: nodesLabel}
@@ -73,11 +68,9 @@ function vis_fishbone(...params)
 		
 		
 		for(let i =0; i<subcauses.length; i++){
-			console.log("Subcauses: " +subcauses);
 		let nodesId = "sub" +i;
 		let nodesLabel = subcauses[i];
 		let parentId = parents[i]; 
-		console.log("Parent: " +parentId);
 		nodes.push(
 			{id: nodesId, 
 			label: nodesLabel}
@@ -155,7 +148,6 @@ function editGraph(...params){
 	let parents = params[4].split(',');
 
 	document.getElementById("graph"+j).innerHTML =" ";
-	//document.getElementById("graphDetail"+j).innerHTML =" ";
 	const edit = document.getElementById("edit");
 	edit.remove();
 	sendTo = [String(params[0]), params[2], params[3], params[1], params[4]];
@@ -174,7 +166,7 @@ function editGraph(...params){
 	const editSend3 = [[sendTo], effect];
 	document.getElementById("causesList"+j).innerHTML += "<br><h4><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#newModal'>Add a new cause</button></h4> ";
 	document.getElementById("causesList"+j).innerHTML += "<h4>Effect: <button type='button' class='btn btn-primary' data-toggle='modal'  onclick=\"question('"+editSend3+"');\" data-target='#editModal'>"+effect+"</button></h4>";
-	document.getElementById("causesList"+j).innerHTML += "<br><h4><button type='button' onclick = '#' class='btn btn-primary'>Save Changes</button></h4> ";
+	document.getElementById("causesList"+j).innerHTML += "<br><h4><button type='button' onclick = 'deleteGraph()' class='btn btn-primary'>Delete Graph</button></h4> ";
 	vis_fishbone_edit(sendTo);
 	
 }
@@ -185,9 +177,6 @@ function showGraphs()
 	getDocIdPublic()
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://us-central1-fyp-8639e.cloudfunctions.net/returnUserGraphsVis', true);
-	//+ "?uid=" + getCookie('uid')
-	console.log("get worked");
-	console.log(xhr);
     //Track the state changes of the request
     xhr.onreadystatechange = function()
     {
@@ -204,25 +193,19 @@ function showGraphs()
                 for (let j = 0; j < data.length; j++) {
 					if(data[j].uid === getCookie('uid')){
 						let causes = data[j].causes;
-						console.log(causes);
 						let effect = data[j].effect;
 						let subcauses = data[j].subcauses;
-						console.log(subcauses);
 						let parents = data[j].parents;
 						let btn = "button"+j;
 						let docId = data[j].id;
-						console.log(docId);
 						docIdDict[effect] = docId;
 						document.getElementById("graphs").innerHTML += "<p><center><h3><button id='"+btn+"' onclick=\"vis_fishbone('"+data[j].causes+"', '" +data[j].effect+"', "+j+", '"+data[j].subcauses+"', '"+data[j].parents+"');\" class='btn btn-warning btn-lg'>Graph " +data[j].effect+" </button>";
-						console.log("MyCanvas"+j);
 						document.getElementById("graphs").innerHTML += "<div id='graphDetail"+j+"'></h3><h4><center>Causes: " +data[j].causes+"<br>Effect: " +effect+"<br>SubCauses: " +subcauses+"<br></center></h4></center></p></div><div id=graph"+j+"></div> <div id=buttonyo"+j+"></div>";
 					}
-					console.log(docIdDict);
                     graphlist.push(data[j].code);
                 }
                 console.log("graphlist:" + graphlist[0]);
 				sHTML += "</p>";
-				console.log(sHTML);
                 document.getElementById("graphs").innerHTML += sHTML;
 				
 			
@@ -238,9 +221,6 @@ function showGraphs()
 function sayHello(){
 	var xhr = new XMLHttpRequest();
     xhr.open('GET', 'https://us-central1-fyp-8639e.cloudfunctions.net/returnUserEmail', true);
-	//+ "?uid=" + getCookie('uid')
-	console.log("get worked");
-	console.log(xhr);
     //Track the state changes of the request
     xhr.onreadystatechange = function()
     {
@@ -253,8 +233,10 @@ function sayHello(){
 				let email = "";
                 let data = JSON.parse(xhr.responseText);
                 for (let j = 0; j < data.length; j++) {
+					console.log("User uid " +data[j].uid+ " Cookie uid " +getCookie('uid')+ " User email: " +data[j].email);
 					if(data[j].uid === getCookie('uid')){
 						email = data[j].email;
+						console.log("Email: " +email);
 						}
                 }
 
@@ -290,12 +272,9 @@ firebase.auth().onAuthStateChanged((user) => {
 
 function vis_fishbone_edit(...params)
 {
-	console.log(params);
-	console.log(params[0]);
 	let causes = params[0][0].split(',');
 	let effect = params[0][1];
 	let j = params[0][2];
-	console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
 	let subcauses = params[0][3].split(',');
 	let parents = params[0][4].split(',');
 	document.getElementById("edit_graph_visual"+j).innerHTML = "";
@@ -326,9 +305,7 @@ function vis_fishbone_edit(...params)
 		for(let i =1; i<causes.length + 1; i++){
 		let nodesId = i;
 		let nodesLabel = causes[i-1];
-		console.log(nodesLabel);
 		if(i%2==1){
-		console.log("odd: " + nodesLabel);
 			nodes.push(
 			{id: causes.length + nodesId, 
 			label: ""},
@@ -340,11 +317,8 @@ function vis_fishbone_edit(...params)
 			to: nodesId,
 			label: ""}
 		);
-		console.log(causes.length + nodesId);
-		console.log(nodesId);
 		}
 		else{
-			console.log("Even: " + nodesLabel);
 		nodes.push(
 			{id: nodesId, 
 			label: nodesLabel}
@@ -360,11 +334,9 @@ function vis_fishbone_edit(...params)
 		
 		
 		for(let i =0; i<subcauses.length; i++){
-			console.log("Subcauses: " +subcauses);
 		let nodesId = "sub" +i;
 		let nodesLabel = subcauses[i];
 		let parentId = parents[i]; 
-		console.log("Parent: " +parentId);
 		nodes.push(
 			{id: nodesId, 
 			label: nodesLabel}
@@ -430,24 +402,32 @@ function vis_fishbone_edit(...params)
 function question(...params){
 	let split = params[0].split(',')
 	let cause = split[split.length -1];
-	//currentGraph = sendTo;
-	console.log(cause);
 	document.getElementById("edit_modal_body").innerHTML = "";
 	document.getElementById("edit_modal_body").innerHTML += cause;
-	document.getElementById("element").value=cause;
+	document.getElementById("edited_element").value = cause;
 
 }
 
 
-function editSaved(){
-	let causes1 = sendTo[0].split(',');
+function editSavedCause(){
+	let oldCause = document.getElementById("edit_modal_body").innerHTML;
 	let effect1 = sendTo[1];
-	let j = sendTo[2];
 	let subcauses1 = sendTo[3].split(',');
+	if(oldCause == effect1){
+		editEffect();
+	}
+	else if(subcauses1.includes(oldCause)){
+		editSubCause();
+	}
+	else{
+	let causes1 = sendTo[0].split(',');
+	let j = sendTo[2];
+	let newCause = document.getElementById("edited_element").value.toString();
+	const index = causes1.indexOf(oldCause);
+	causes1[index] = newCause;
 	let parents1 = sendTo[4].split(',');
 	var docId1 = docIdDict[effect1];
 	var docId2 = docIdDictPublic[effect1];
-	alert("updateDoc called");
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
 
@@ -459,19 +439,83 @@ function editSaved(){
         let OK = 200; // status 200 is a successful return
         if (xhr.readyState === DONE) {
             if (xhr.status === OK) {
-                let docId = JSON.parse(xhr.responseText);
-                document.cookie = "docid =" + docId;
-                window.location.href = "./fishbone2.html";
             } else {
                 console.log('Error: ' + xhr.status);
             }
         }
     };
 
-    xhr.send(JSON.stringify({"email":document.getElementById("email1").value, "uid" : getCookie('uid')}));
-	//console.log(docId);
-	updateDocument('visGraph', docId2, { causes: causes1, effect: effect1, parents: parents1, subcauses: subcauses1});
-	updateDocument('visGraphPrivate', docId1, { causes: causes1, effect: effect1, parents: parents1, subcauses: subcauses1});
+    
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+
+	}
+	}
+
+
+function editEffect(){
+	let causes1 = sendTo[0].split(',');
+	let effect1 = sendTo[1];
+	let j = sendTo[2];
+	let newEffect = document.getElementById("edited_element").value.toString();
+	let subcauses1 = sendTo[3].split(',');
+	let parents1 = sendTo[4].split(',');
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":newEffect, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+}
+
+
+function editSubCause(){
+	let causes1 = sendTo[0].split(',');
+	let effect1 = sendTo[1];
+	let j = sendTo[2];
+	let oldSubCause = document.getElementById("edit_modal_body").innerHTML;	
+	let newSub = document.getElementById("edited_element").value.toString();
+	let subcauses1 = sendTo[3].split(',');
+	
+	const index = subcauses1.indexOf(oldSubCause);
+	subcauses1[index] = newSub;
+	
+	let parents1 = sendTo[4].split(',');
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
 }
 
 
@@ -493,10 +537,8 @@ function getDocIdPublic()
 					if(data[j].uid === getCookie('uid')){
 						let effect = data[j].effect;
 						let docId = data[j].id;
-						console.log(docId);
 						docIdDictPublic[effect] = docId;
 					}
-					console.log(docIdDictPublic);
                 }
 				
 			
@@ -507,4 +549,182 @@ function getDocIdPublic()
     }
     xhr.send(null);
 }
+
+
+function editSavedSubCause(){
+	let causes1 = sendTo[0].split(',');
+	let effect1 = sendTo[1];
+	let j = sendTo[2];
+	let subcauses1 = sendTo[3].split(',');
+	let newSubCause = document.getElementById("edited_element").value.toString();
+	let oldSubCause = document.getElementById("edit_modal_body").innerHTML;
+	const index = subcauses1.indexOf(oldSubCause);
+	subcauses1[index] = newSubCause;
+	let parents1 = sendTo[4].split(',');
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+}
+
+
+function addCause(){
+	let effect1 = sendTo[1];
+	let subcauses1 = sendTo[3].split(',');
+	let causes1 = sendTo[0].split(',');
+	let j = sendTo[2];
+	let newCause = document.getElementById("new_element").value.toString();
+	console.log(newCause);
+	causes1.push(newCause);
+	console.log(causes1);
+	let parents1 = sendTo[4].split(',');
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+
+	
+	}
+	
+	
+	
+function deleteCause(){
+	let oldCause = document.getElementById("edit_modal_body").innerHTML;
+	let effect1 = sendTo[1];
+	let subcauses1 = sendTo[3].split(',');
+	
+	if(subcauses1.includes(oldCause)){
+		deleteSubCause();
+	}
+	else if(oldCause == effect1){
+		alert("You cannot delete an effect");
+	}
+	else{
+	let causes1 = sendTo[0].split(',');
+	let j = sendTo[2];
+	const index = causes1.indexOf(oldCause);
+	causes2 = causes1.splice(index,index);
+	let parents1 = sendTo[4].split(',');
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"causes":causes2, "subcauses": subcauses1, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+
+	}
+	}
+	
+	
+function deleteSubCause(){
+	let causes1 = sendTo[0].split(',');
+	let effect1 = sendTo[1];
+	let j = sendTo[2];
+	let oldSubCause = document.getElementById("edit_modal_body").innerHTML;	
+	let subcauses1 = sendTo[3].split(',');
+	
+	const index = subcauses1.indexOf(oldSubCause);
+	subcauses2 = subcauses1.splice(index,index);
+	
+	let parents1 = sendTo[4].split(',');
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/updateDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"causes":causes1, "subcauses": subcauses2, "parents": parents1, "effect":effect1, "uid" : getCookie('uid'), "docId1": docId1, "docId2": docId2}));
+}
+
+
+function deleteGraph(){
+	let effect1 = sendTo[1];
+
+	var docId1 = docIdDict[effect1];
+	var docId2 = docIdDictPublic[effect1];
+    let xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/deleteDocument', true);
+
+    xhr.setRequestHeader("Content-type", "application/json");
+    //Track the state changes of the request
+    xhr.onreadystatechange = function()
+    {
+        let DONE = 4; //readyState 4 means the request is done
+        let OK = 200; // status 200 is a successful return
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+            } else {
+                console.log('Error: ' + xhr.status);
+            }
+        }
+    };
+
+    
+	xhr.send(JSON.stringify({"docId1": docId1, "docId2": docId2}));
+
+	}
+	
 	

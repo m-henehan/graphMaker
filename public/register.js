@@ -1,3 +1,5 @@
+var cookie1 = "";
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
@@ -16,13 +18,11 @@ function getCookie(cname) {
 
 function register()
 {
-    alert("Working");
 	let email = document.getElementById('email1').value;
     let password = document.getElementById('password1').value;
 	let password2 = document.getElementById('password2').value;
 	
 	if(email.includes("@") && password==password2 && password.length > 5){
-		alert("creds ok");
 		firebase.auth().createUserWithEmailAndPassword(email, password)
         .then((userCredential) => {
 			var user = userCredential.user;
@@ -37,21 +37,21 @@ function register()
             var errorCode = error.code;
             var errorMessage = error.message;
             console.log(errorMessage, errorCode);
-			alert(errorMessage);
+			alert("Error: " +errorMessage);
         });
 		createUser();
 		
 	}
 	
 	else{
-		alert("Incorrect email address or password entered.");
+		alert("Incorrect or badly formatted email address/password entered. Password must be at least six characters");
+		
 	}
 	
 
 }
 
 function createUser(){
-    alert("createUser called");
     let xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://us-central1-fyp-8639e.cloudfunctions.net/createUser', true);
 
@@ -64,14 +64,13 @@ function createUser(){
         if (xhr.readyState === DONE) {
             if (xhr.status === OK) {
                 let docId = JSON.parse(xhr.responseText);
-                document.cookie = "docid =" + docId;
-                window.location.href = "./fishbone2.html";
+                //document.cookie = "docid =" + docId;
+                window.location.href = "./fishbone_2.html";
             } else {
                 console.log('Error: ' + xhr.status);
             }
         }
     };
-
     xhr.send(JSON.stringify({"email":document.getElementById("email1").value, "uid" : getCookie('uid')}));
 	//"uid" : getCookie('uid')
 }

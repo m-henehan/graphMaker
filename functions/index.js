@@ -311,8 +311,10 @@ exports.updateDocument = functions.https.onRequest((request, response) =>
     cors(request, response, () => {
         //const currentTime = admin.firestore.Timestamp.now();
         //request.body.timestamp = currentTime;
-		const docRef = admin.firestore().collection(request.body.collectionName).doc(request.body.documentId);
-        return docRef.update(request.body.graph).then((snapshot) =>{
+		const docRef = admin.firestore().collection("visGraphPrivate").doc(request.body.docId1);
+		const docRef2 = admin.firestore().collection("visGraph").doc(request.body.docId2);
+		docRef2.update({"causes":request.body.causes, "subcauses": request.body.subcauses, "parents": request.body.parents, "effect": request.body.effect})
+        return docRef.update({"causes":request.body.causes, "subcauses": request.body.subcauses, "parents": request.body.parents, "effect": request.body.effect}).then((snapshot) =>{
             console.log("edited in database");
             console.log(snapshot.id);
             // console.log(snapshot.DocumentReference.toString());
@@ -321,6 +323,29 @@ exports.updateDocument = functions.https.onRequest((request, response) =>
             response.send(JSON.stringify(snapshot.id));
         });
     });
+});
+
+exports.deleteDocument = functions.https.onRequest((request, response) =>
+{
+    cors(request, response, () => {
+        //const currentTime = admin.firestore.Timestamp.now();
+        //request.body.timestamp = currentTime;
+		const docRef = admin.firestore().collection("visGraphPrivate").doc(request.body.docId1);
+		const docRef2 = admin.firestore().collection("visGraph").doc(request.body.docId2);
+		docRef2.delete().then(() => {
+    console.log("Document successfully deleted!");
+}).catch((error) => {
+    console.error("Error removing document: ", error);
+});
+
+        return docRef.delete().then(() => {
+    console.log("Document successfully deleted!");
+}).catch((error) => {
+    console.error("Error removing document: ", error);
+});
+
+            response.send(JSON.stringify(snapshot.id));
+        });
 });
 
 

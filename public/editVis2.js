@@ -157,7 +157,7 @@ function editGraph(...params){
 	document.getElementById("graph"+j).innerHTML += "<div class='container' id = 'edit"+j+"'><h1>Edit Your Graph Here</h1><div class='row'><div id= 'causesList"+j+"' class='col-sm-6'><center></div><div class='col-sm-6' ><div id='edit_graph_visual"+j+"'>";
 	
 	for(let i=0; i<causes.length; i++){
-		document.getElementById("causesList"+j).innerHTML += "<br><h4>Cause "+(i+1)+": <a onclick = question("+causes[i]+")>"+causes[i]+"</a></h4><button onclick="document.getElementById('id01').style.display='block'">Open Modal</button>";
+		document.getElementById("causesList"+j).innerHTML += "<br><h4>Cause "+(i+1)+": <a onclick = question("+causes[i]+")>"+causes[i]+"</a></h4><button onclick=document.getElementById('id01').style.display='block'>Open Modal</button>";
 		for(let k=0; k<parents.length; k++){
 			if (parents[k] == (i+1)){
 				document.getElementById("causesList"+j).innerHTML += "<h4>	SubCause: <a onclick = question("+subcauses[k]+")>"+subcauses[k]+"</a></h4>";
